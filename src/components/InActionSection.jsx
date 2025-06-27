@@ -138,41 +138,43 @@ Chief Complaint:
   }
 
   return (
-    <section id="in-action" className="py-20 bg-slate-800">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-blue-400 mb-6">See Our Solutions in Action</h2>
+    <section id="in-action" className="py-12 sm:py-16 lg:py-20 bg-slate-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12 lg:mb-16">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-400 mb-6">See Our Solutions in Action</h2>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex justify-center mb-8">
-          <div className="flex w-full max-w-2xl">
-            {tabs.map((tab, index) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`flex-1 px-6 py-3 font-medium transition-all duration-300 relative ${
-                  activeTab === tab
-                    ? 'bg-slate-700 text-white'
-                    : 'bg-slate-800 text-gray-400 hover:text-white hover:bg-slate-700'
-                } ${
-                  index === 0 ? 'rounded-l-lg' : 
-                  index === tabs.length - 1 ? 'rounded-r-lg' : ''
-                }`}
-              >
-                {tab}
-                {activeTab === tab && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500"></div>
-                )}
-              </button>
-            ))}
+        <div className="flex justify-center mb-6 lg:mb-8">
+          <div className="flex w-full max-w-4xl overflow-x-auto">
+            <div className="flex min-w-full sm:min-w-0 sm:w-full">
+              {tabs.map((tab, index) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`flex-1 min-w-[80px] sm:min-w-0 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-xs sm:text-sm lg:text-base font-medium transition-all duration-300 relative whitespace-nowrap ${
+                    activeTab === tab
+                      ? 'bg-slate-700 text-white'
+                      : 'bg-slate-800 text-gray-400 hover:text-white hover:bg-slate-700'
+                  } ${
+                    index === 0 ? 'rounded-l-lg' : 
+                    index === tabs.length - 1 ? 'rounded-r-lg' : ''
+                  }`}
+                >
+                  {tab}
+                  {activeTab === tab && (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500"></div>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 lg:mb-8">
           <button
             onClick={toggleExpansion}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-medium transition-all duration-300"
           >
             {isExpanded ? 'Click to collapse comparison' : 'Click to expand comparison'}
           </button>
@@ -182,12 +184,12 @@ Chief Complaint:
           <div className="bg-slate-900 rounded-xl overflow-hidden">
             {/* Example Tabs */}
             {tabContent[activeTab].examples.length > 1 && (
-              <div className="flex bg-slate-800">
+              <div className="flex bg-slate-800 overflow-x-auto">
                 {tabContent[activeTab].examples.map((example) => (
                   <button
                     key={example.id}
                     onClick={() => setActiveExample(example.id)}
-                    className={`flex-1 px-6 py-4 text-center font-medium transition-all duration-300 ${
+                    className={`flex-1 min-w-[120px] px-4 sm:px-6 py-3 sm:py-4 text-center text-sm sm:text-base font-medium transition-all duration-300 whitespace-nowrap ${
                       activeExample === example.id
                         ? 'bg-blue-600 text-white'
                         : 'text-gray-400 hover:text-white hover:bg-slate-700'
@@ -199,29 +201,29 @@ Chief Complaint:
               </div>
             )}
 
-            <div className="p-8">
-              <h3 className="text-2xl font-bold text-white mb-8 text-center">
+            <div className="p-4 sm:p-6 lg:p-8">
+              <h3 className="text-xl sm:text-2xl font-bold text-white mb-6 lg:mb-8 text-center">
                 {tabContent[activeTab].title}
               </h3>
 
               {/* Two Column Layout */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
                 {/* Left Column */}
                 <div className="space-y-4">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-4">
+                    <div className="bg-blue-600 text-white px-3 sm:px-4 py-1 sm:py-2 rounded text-xs sm:text-sm font-medium">
                       {tabContent[activeTab].examples[activeExample - 1].title}
                     </div>
-                    <div className="bg-gray-600 text-white px-4 py-2 rounded text-sm">
+                    <div className="bg-gray-600 text-white px-3 sm:px-4 py-1 sm:py-2 rounded text-xs sm:text-sm">
                       {tabContent[activeTab].examples[activeExample - 1].subtitle}
                     </div>
                   </div>
                   
-                  <div className="bg-slate-800 rounded-lg p-6">
-                    <h4 className="text-white font-semibold mb-4">
+                  <div className="bg-slate-800 rounded-lg p-4 sm:p-6">
+                    <h4 className="text-white font-semibold mb-4 text-sm sm:text-base">
                       {tabContent[activeTab].examples[activeExample - 1].leftTitle}
                     </h4>
-                    <div className="text-gray-300 text-sm leading-relaxed max-h-96 overflow-y-auto">
+                    <div className="text-gray-300 text-xs sm:text-sm leading-relaxed max-h-64 sm:max-h-80 lg:max-h-96 overflow-y-auto">
                       {tabContent[activeTab].examples[activeExample - 1].leftContent}
                     </div>
                   </div>
@@ -229,20 +231,20 @@ Chief Complaint:
 
                 {/* Right Column */}
                 <div className="space-y-4">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="bg-orange-600 text-white px-4 py-2 rounded text-sm font-medium">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-4">
+                    <div className="bg-orange-600 text-white px-3 sm:px-4 py-1 sm:py-2 rounded text-xs sm:text-sm font-medium">
                       {activeTab} Note
                     </div>
-                    <div className="bg-orange-500 text-white px-4 py-2 rounded text-sm">
+                    <div className="bg-orange-500 text-white px-3 sm:px-4 py-1 sm:py-2 rounded text-xs sm:text-sm">
                       AI Generated Output
                     </div>
                   </div>
                   
-                  <div className="bg-slate-800 rounded-lg p-6">
-                    <h4 className="text-white font-semibold mb-4">
+                  <div className="bg-slate-800 rounded-lg p-4 sm:p-6">
+                    <h4 className="text-white font-semibold mb-4 text-sm sm:text-base">
                       {tabContent[activeTab].examples[activeExample - 1].rightTitle}
                     </h4>
-                    <div className="text-gray-300 text-sm leading-relaxed max-h-96 overflow-y-auto space-y-3">
+                    <div className="text-gray-300 text-xs sm:text-sm leading-relaxed max-h-64 sm:max-h-80 lg:max-h-96 overflow-y-auto space-y-3">
                       {typeof tabContent[activeTab].examples[activeExample - 1].rightContent === 'object' ? (
                         Object.entries(tabContent[activeTab].examples[activeExample - 1].rightContent).map(([key, value]) => (
                           <div key={key}>
