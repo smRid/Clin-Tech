@@ -29,7 +29,7 @@ const GetStartedSection = () => {
             </div>
           </div>
 
-          {/* Call to Action */}
+
           <div className="text-center mb-12">
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link 

@@ -40,13 +40,13 @@ const InActionSection = () => {
           leftTitle: "Messy Original Therapy Note",
           leftContent: `Patient Name: Emily White Date: 11/04/2023 Session #: 8
 
-Focus: Social anxiety and assertiveness training.
+          Focus: Social anxiety and assertiveness training.
 
-Subjective:
-Pt reported attending a social event over the weekend, which was a goal for her. First time in quite a while, almost didn't go. Managed to stay for about an hour and talk to 2 people, which she considers a small success. Noticed feeling anxious and sweating while there. Feels a bit discouraged that it was still so hard, despite practicing skills. Also mentioned a conflict at work where she felt unable to speak up for herself. Sleep has been poor past couple nights due to worry about stuff. No self harm ideation.
+          Subjective:
+          Pt reported attending a social event over the weekend, which was a goal for her. First time in quite a while, almost didn't go. Managed to stay for about an hour and talk to 2 people, which she considers a small success. Noticed feeling anxious and sweating while there. Feels a bit discouraged that it was still so hard, despite practicing skills. Also mentioned a conflict at work where she felt unable to speak up for herself. Sleep has been poor past couple nights due to worry about stuff. No self harm ideation.
 
-Objective:
-Pt presented somewhat flat affect initially, gradually warmed up during session. Speech quiet but clear, good eye contact. Observed some fidgeting initially but settled as session progressed. Engaged well in role-play exercises.`,
+          Objective:
+          Pt presented somewhat flat affect initially, gradually warmed up during session. Speech quiet but clear, good eye contact. Observed some fidgeting initially but settled as session progressed. Engaged well in role-play exercises.`,
           rightTitle: "Chartwright-Enhanced Chart",
           rightContent: {
             patient: "Emily White",
@@ -69,12 +69,12 @@ Pt presented somewhat flat affect initially, gradually warmed up during session.
           leftTitle: "Original Doctor's Note",
           leftContent: `Patient Name: Jane Smith DOB: 07/22/1968 Address: 456 Oak Avenue, Springfield, IL 62704 Phone: (217) 555-0199 MRN: 555432 Date of Visit: 2024-05-21 Attending Physician: Dr. Robert Miller Clinic: Springfield Community Health Clinic
 
-Subjective:
-Ms. Jane Smith, a 55-year-old female, presents for her annual check-up on May 21, 2024. She reports feeling generally well. She mentions occasional lower back pain, especially after prolonged sitting. No fever, chills, or recent illness. She is currently taking Metformin for Type 2 Diabetes. Her last A1c was 6.8%. She lives at 456 Oak Avenue with her husband. Her contact number is (217) 555-0199.
+          Subjective:
+          Ms. Jane Smith, a 55-year-old female, presents for her annual check-up on May 21, 2024. She reports feeling generally well. She mentions occasional lower back pain, especially after prolonged sitting. No fever, chills, or recent illness. She is currently taking Metformin for Type 2 Diabetes. Her last A1c was 6.8%. She lives at 456 Oak Avenue with her husband. Her contact number is (217) 555-0199.
 
-Objective:
-Vital Signs: BP 130/80 mmHg, HR 75 bpm, RR 18/min, Temp 98.2°F, Weight: 165 lbs.`,
-          rightTitle: "Redactify AI-Enhanced Note (HIPAA Compliant)",
+          Objective:
+          Vital Signs: BP 130/80 mmHg, HR 75 bpm, RR 18/min, Temp 98.2°F, Weight: 165 lbs.`,
+                    rightTitle: "Redactify AI-Enhanced Note (HIPAA Compliant)",
           rightContent: {
             patient: "REDACT",
             dob: "REDACT",
@@ -102,16 +102,16 @@ Vital Signs: BP 130/80 mmHg, HR 75 bpm, RR 18/min, Temp 98.2°F, Weight: 165 lbs
           leftContent: `Patient: John Smith, DOB: 03/15/1968. Encounter Date: 10/26/2023.
 
 Chief Complaint:
-Chest pain, shortness of breath.
+          Chest pain, shortness of breath.
 
-History of Present Illness:
-Patient reports experiencing intermittent chest pain for the past 3 days, described as a pressure-like sensation radiating to the left arm. Also reports shortness of breath, especially with exertion. No fever, cough, or other symptoms.
+          History of Present Illness:
+          Patient reports experiencing intermittent chest pain for the past 3 days, described as a pressure-like sensation radiating to the left arm. Also reports shortness of breath, especially with exertion. No fever, cough, or other symptoms.
 
-Past Medical History:
-Hypertension, Type 2 Diabetes Mellitus, Hyperlipidemia.
+          Past Medical History:
+          Hypertension, Type 2 Diabetes Mellitus, Hyperlipidemia.
 
-Medications:
-Lisinopril 20mg daily, Metformin 1000mg twice daily, Atorvastatin 40mg daily.`,
+          Medications:
+          Lisinopril 20mg daily, Metformin 1000mg twice daily, Atorvastatin 40mg daily.`,
           rightTitle: "Validify Analysis & Recommendations",
           rightContent: {
             initialReview: "Patient: John Smith, DOB: 03/15/1968 Encounter Date: 10/26/2023",
@@ -169,7 +169,6 @@ Lisinopril 20mg daily, Metformin 1000mg twice daily, Atorvastatin 40mg daily.`,
           </div>
         </div>
 
-        {/* Expand/Collapse Button */}
         <div className="text-center mb-8">
           <button
             onClick={toggleExpansion}
@@ -179,7 +178,6 @@ Lisinopril 20mg daily, Metformin 1000mg twice daily, Atorvastatin 40mg daily.`,
           </button>
         </div>
 
-        {/* Content Area */}
         {isExpanded && (
           <div className="bg-slate-900 rounded-xl overflow-hidden">
             {/* Example Tabs */}
@@ -201,7 +199,6 @@ Lisinopril 20mg daily, Metformin 1000mg twice daily, Atorvastatin 40mg daily.`,
               </div>
             )}
 
-            {/* Main Content */}
             <div className="p-8">
               <h3 className="text-2xl font-bold text-white mb-8 text-center">
                 {tabContent[activeTab].title}

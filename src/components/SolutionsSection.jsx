@@ -64,17 +64,14 @@ const SolutionsSection = () => {
               key={solution.id}
               className={`bg-slate-800 rounded-xl p-8 border-t-4 ${solution.borderColor} hover:bg-slate-750 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-2 transform cursor-pointer`}
             >
-              {/* Icon at top */}
               <div className="flex justify-start mb-6">
                 <div className="p-3 bg-slate-700 rounded-lg">
                   {solution.icon}
                 </div>
               </div>
               
-              {/* Title */}
               <h3 className="text-2xl font-bold text-blue-400 mb-4">{solution.title}</h3>
               
-              {/* Description */}
               <p className="text-gray-300 leading-relaxed text-base">
                 {solution.description}
               </p>

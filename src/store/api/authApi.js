@@ -2,91 +2,32 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://alibackend.duckdns.org'
 
-const baseQueryWithMock = fetchBaseQuery({
+const baseQuery = fetchBaseQuery({
   baseUrl,
-  prepareHeaders: (headers, { getState }) => {
-    const token = getState().auth.token
-    if (token) {
-      headers.set('authorization', `Bearer ${token}`)
+  prepareHeaders: (headers, { getState, endpoint }) => {
+    const publicEndpoints = ['signup', 'signin', 'getTerms', 'sendSupportRequest', 'verifyOtp', 'resendOtp']
+    
+    if (!publicEndpoints.includes(endpoint)) {
+      const token = getState().auth.token
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`)
+      }
     }
-    headers.set('Content-Type', 'application/json')
+    
+    if (['createChat', 'addMessageToChat'].includes(endpoint)) {
+      headers.set('Content-Type', 'text/plain')
+    } else {
+      headers.set('Content-Type', 'application/json')
+    }
+    
     headers.set('Accept', 'application/json')
     return headers
   },
 })
 
-const baseQueryWithFallback = async (args, api, extraOptions) => {
-  try {
-    console.log('Making API request:', args)
-    const result = await baseQueryWithMock(args, api, extraOptions)
-    
-    console.log('Base query result:', result)
-
-
-    const isAuthEndpoint = args.url && (
-      args.url.includes('signup') || 
-      args.url.includes('signin') || 
-      args.url.includes('authentication_app')
-    )
-
-    if (isAuthEndpoint && result.error) {
-      console.log('Auth endpoint error detected, returning mock data')
-      console.log('Error status:', result.error.status)
-      console.log('Error details:', result.error)
-      
-      const credentials = args.body || {}
-      
-      return {
-        data: {
-          user: {
-            id: 1,
-            email: credentials.email || 'demo@example.com',
-            name: 'Demo User'
-          },
-          token: 'mock-jwt-token-' + Date.now(),
-          isMock: true
-        }
-      }
-    }
-
-    if (result.error && result.error.status === 'FETCH_ERROR') {
-      console.log('Network error for non-auth endpoint')
-      return result
-    }
-    
-    return result
-  } catch (error) {
-    console.log('Exception in baseQueryWithFallback:', error)
-    
-    const credentials = args.body || {}
-    const isAuthEndpoint = args.url && (
-      args.url.includes('signup') || 
-      args.url.includes('signin') || 
-      args.url.includes('authentication_app')
-    )
-    
-    if (isAuthEndpoint) {
-      console.log('Exception caught for auth endpoint, returning mock data')
-      return {
-        data: {
-          user: {
-            id: 1,
-            email: credentials.email || 'demo@example.com',
-            name: 'Demo User'
-          },
-          token: 'mock-jwt-token-' + Date.now(),
-          isMock: true
-        }
-      }
-    }
-    
-    throw error
-  }
-}
-
 export const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: baseQueryWithFallback,
+  baseQuery,
   tagTypes: ['User'],
   endpoints: (builder) => ({
     // Sign Up
@@ -130,6 +71,98 @@ export const authApi = createApi({
       }),
       invalidatesTags: ['User'],
     }),
+
+    // OTP Verification
+    verifyOtp: builder.mutation({
+      query: (otpData) => ({
+        url: '/authentication_app/verify_otp/',
+        method: 'POST',
+        body: otpData,
+      }),
+    }),
+
+    // Resend OTP
+    resendOtp: builder.mutation({
+      query: (emailData) => ({
+        url: '/authentication_app/resend_otp/',
+        method: 'POST',
+        body: emailData,
+      }),
+    }),
+
+    // User Log (Settings)
+    getUserLog: builder.query({
+      query: () => '/authentication_app/settings/user_log/',
+      providesTags: ['User'],
+    }),
+
+    // Get Terms
+    getTerms: builder.query({
+      query: () => '/terms_and_support/terms/',
+    }),
+
+    // Support Request
+    sendSupportRequest: builder.mutation({
+      query: (supportData) => ({
+        url: '/terms_and_support/support/',
+        method: 'POST',
+        body: supportData,
+      }),
+    }),
+
+    // Company User Management - Add User
+    addCompanyUser: builder.mutation({
+      query: (userData) => ({
+        url: '/company_user_management/add_user/',
+        method: 'POST',
+        body: userData,
+      }),
+    }),
+
+    // Chat Endpoints
+    createChat: builder.mutation({
+      query: (message) => ({
+        url: '/chat/create_chat/',
+        method: 'POST',
+        body: message,
+      }),
+    }),
+
+    addMessageToChat: builder.mutation({
+      query: (message) => ({
+        url: '/chat/add_message_to_chat/',
+        method: 'POST',
+        body: message,
+      }),
+    }),
+
+    getUserChatList: builder.query({
+      query: () => '/chat/get_users_chat_list/',
+      providesTags: ['User'],
+    }),
+
+    // Subscription Management
+    buySubscription: builder.mutation({
+      query: (subscriptionData) => ({
+        url: '/subscription/buy_subscription/',
+        method: 'POST',
+        body: subscriptionData,
+      }),
+    }),
+
+    updateSubscription: builder.mutation({
+      query: (subscriptionData) => ({
+        url: '/subscription/update_subscription/',
+        method: 'PUT',
+        body: subscriptionData,
+      }),
+    }),
+
+    // Company User Management - Get User List
+    getCompanyUserList: builder.query({
+      query: () => '/company_user_management/user_list/',
+      providesTags: ['User'],
+    }),
   }),
 })
 
@@ -139,4 +172,16 @@ export const {
   useLogoutMutation,
   useGetUserProfileQuery,
   useUpdateUserProfileMutation,
+  useVerifyOtpMutation,
+  useResendOtpMutation,
+  useGetUserLogQuery,
+  useGetTermsQuery,
+  useSendSupportRequestMutation,
+  useAddCompanyUserMutation,
+  useCreateChatMutation,
+  useAddMessageToChatMutation,
+  useGetUserChatListQuery,
+  useBuySubscriptionMutation,
+  useUpdateSubscriptionMutation,
+  useGetCompanyUserListQuery,
 } = authApi

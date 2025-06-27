@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-gray-900 overflow-hidden">
-      {/* Background Elements */}
+
       <div className="absolute inset-0">
         {/* Large bubble effects like in the screenshot */}
         <div className="absolute top-10 left-10 w-96 h-96 bg-blue-600/8 rounded-full blur-3xl"></div>
@@ -31,7 +31,6 @@ const HeroSection = () => {
           {/* Main Logo/Icon */}
           <div className="mb-12">
             <div className="w-32 h-32 mx-auto mb-8 relative">
-              {/* Logo with transparent background */}
               <div className="w-full h-full flex items-center justify-center relative p-2">
                 <img 
                   src="/Logo.png" 
@@ -46,8 +45,6 @@ const HeroSection = () => {
           <h1 className="text-5xl md:text-7xl font-bold text-blue-400 mb-8 tracking-tight">
             Clin Technologies
           </h1>
-
-          {/* Subtitle */}
           <div className="max-w-5xl mx-auto mb-12">
             <p className="text-xl md:text-2xl text-gray-500 leading-relaxed mb-6">
               Revolutionizing clinical documentation through{' '}

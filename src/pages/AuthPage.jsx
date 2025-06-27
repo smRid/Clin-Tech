@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSignupMutation, useSigninMutation } from '../store/api/authApi'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../store/slices/authSlice'
+import OtpVerification from '../components/OtpVerification'
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true)
+  const [showOtpVerification, setShowOtpVerification] = useState(false)
+  const [signupEmail, setSignupEmail] = useState('')
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -14,8 +17,12 @@ const AuthPage = () => {
   const [errors, setErrors] = useState({})
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [signup, { isLoading: isSignupLoading }] = useSignupMutation()
   const [signin, { isLoading: isSigninLoading }] = useSigninMutation()
+  
+  // Combined loading state
+  const isLoading = isSignupLoading || isSigninLoading
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -59,56 +66,122 @@ const AuthPage = () => {
     
     if (!validateForm()) return
 
+    console.log('Form validation passed')
+    console.log('Form data:', formData)
+
     try {
-      const credentials = {
-        email: formData.email,
-        password: formData.password
+      let credentials
+      
+      if (isLogin) {
+        credentials = {
+          email: formData.email,
+          password: formData.password
+        }
+      } else {
+        // For signup, include confirm password
+        credentials = {
+          email: formData.email,
+          password: formData.password,
+          confirm_password: formData.confirmPassword
+        }
       }
+
+      console.log('Sending credentials:', credentials)
+      console.log('Is login:', isLogin)
 
       let result
       if (isLogin) {
         result = await signin(credentials).unwrap()
+        
+        // For login, directly set credentials and navigate
+        dispatch(setCredentials({
+          user: result.user,
+          token: result.token || result.access_token
+        }))
+
+        setErrors({ submit: 'Login successful!' })
+        
+        // Clear form
+        setFormData({ email: '', password: '', confirmPassword: '' })
+        
+        // Redirect to home page after successful login
+        setTimeout(() => {
+          navigate('/home')
+        }, 1000)
+        
       } else {
+        // For signup, trigger OTP verification
+        console.log('Attempting signup with:', credentials)
         result = await signup(credentials).unwrap()
+        console.log('Signup result:', result)
+        
+        // Store email for OTP verification and show OTP screen
+        setSignupEmail(formData.email)
+        setShowOtpVerification(true)
+        setErrors({ submit: 'Account created! Please check your email for verification code.' })
       }
-
-      dispatch(setCredentials({
-        user: result.user,
-        token: result.token || result.access_token
-      }))
-
-      if (result.isMock) {
-        setErrors({ submit: 'Demo mode: Authentication successful! (API not configured)' })
-        setTimeout(() => {
-          setErrors({})
-          // You could redirect to dashboard here in real app
-        }, 3000)
-      } else {
-        // Real API success - redirect to dashboard
-        setErrors({ submit: 'Authentication successful!' })
-        setTimeout(() => {
-          setErrors({})
-          // Redirect to dashboard
-        }, 2000)
-      }
+      
     } catch (error) {
       console.error('Auth error:', error)
-      setErrors({ submit: error.data?.message || 'Authentication failed' })
+      console.error('Error status:', error.status)
+      console.error('Error data:', error.data)
+      console.error('Full error object:', JSON.stringify(error, null, 2))
+      
+      if (error.status === 400) {
+        if (error.data?.error?.message === 'EMAIL_EXISTS') {
+          setErrors({ submit: 'This email is already registered. Please use a different email or try logging in.' })
+        } else {
+          const errorMessage = error.data?.message || error.data?.detail || error.data?.error?.message || 'Invalid credentials'
+          setErrors({ submit: errorMessage })
+        }
+      } else if (error.status === 401) {
+        setErrors({ submit: 'Invalid email or password' })
+      } else if (error.status === 404) {
+        setErrors({ submit: 'Service not found. Please try again later.' })
+      } else if (error.status === 500) {
+        setErrors({ submit: 'Server error. Please try again later.' })
+      } else {
+        const errorMessage = error.data?.message || error.data?.detail || error.data?.error || 'Authentication failed. Please check your connection.'
+        setErrors({ submit: errorMessage })
+      }
     }
+  }
+
+  const handleOtpSuccess = (result) => {
+    // OTP verification successful
+    dispatch(setCredentials({
+      user: result.user,
+      token: result.token || result.access_token
+    }))
+    
+    // Navigate to home page
+    navigate('/home')
+  }
+
+  const handleBackToAuth = () => {
+    setShowOtpVerification(false)
+    setSignupEmail('')
+    setErrors({})
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center px-6 py-12">
-      <div className="max-w-md w-full space-y-8">
+      {showOtpVerification ? (
+        <OtpVerification 
+          email={signupEmail}
+          onBack={handleBackToAuth}
+          onSuccess={handleOtpSuccess}
+        />
+      ) : (
+        <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
           <Link to="/" className="flex items-center justify-center space-x-2 mb-8">
             <img 
-              src="/Logo.png" 
+              src="/HomeLogo.png" 
               alt="Clin Technologies Logo" 
-              className="w-10 h-10 object-contain"
+              className="w-12 h-12 object-contain"
             />
-            <span className="text-gray-900 font-semibold text-2xl">Clin</span>
           </Link>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             {isLogin ? 'Hello, Welcome!' : 'Create account'}
@@ -211,26 +284,26 @@ const AuthPage = () => {
 
           {errors.submit && (
             <div className={`border rounded-lg p-3 ${
-              errors.submit.includes('successful') 
+              typeof errors.submit === 'string' && errors.submit.includes('successful') 
                 ? 'bg-green-50 border-green-200' 
                 : 'bg-red-50 border-red-200'
             }`}>
               <p className={`text-sm ${
-                errors.submit.includes('successful') 
+                typeof errors.submit === 'string' && errors.submit.includes('successful') 
                   ? 'text-green-600' 
                   : 'text-red-600'
               }`}>
-                {errors.submit}
+                {typeof errors.submit === 'string' ? errors.submit : 'An error occurred. Please try again.'}
               </p>
             </div>
           )}
 
           <button
             type="submit"
-            disabled={isSignupLoading || isSigninLoading}
+            disabled={isLoading}
             className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-8 py-4 rounded-lg font-semibold text-base transition-all duration-300 disabled:cursor-not-allowed shadow-sm"
           >
-            {(isSignupLoading || isSigninLoading) ? (
+            {isLoading ? (
               <div className="flex items-center justify-center">
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                 {isLogin ? 'Signing in...' : 'Signing up...'}
@@ -282,7 +355,8 @@ const AuthPage = () => {
             </Link>
           </div>
         </form>
-      </div>
+        </div>
+      )}
     </div>
   )
 }

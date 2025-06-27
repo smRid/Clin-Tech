@@ -62,7 +62,6 @@ const TechnologySection = () => {
               key={index} 
               className={`${tech.bgColor} border-2 ${tech.borderColor} rounded-2xl p-6 hover:shadow-xl hover:shadow-blue-500/20 hover:scale-105 transition-all duration-300 group relative`}
             >
-              {/* Badges positioned at top left */}
               {tech.badges && (
                 <div className="mb-6 flex flex-col gap-2">
                   {tech.badges.map((badge, badgeIndex) => (
@@ -100,8 +99,6 @@ const TechnologySection = () => {
               <p className="text-gray-300 leading-relaxed text-base">
                 {tech.description}
               </p>
-
-              {/* Remove badges from bottom since they're now at top */}
             </div>
           ))}
         </div>
